@@ -1,0 +1,17 @@
+{
+  "id": "ros2",
+  "version": "0.1.0",
+  "name": "ROS 2",
+  "description": "Robot Operating System (ROS) 2",
+  "documentationURL": "https://github.com/KUCHITAKE/devcontainer-features/tree/main/src/ros2",
+  "licenseURL": "https://github.com/KUCHITAKE/devcontainer-features/tree/main/LICENSE",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": ["jazzy", "humble", "rolling", "kilted"],
+      "default": "jazzy",
+      "description": "Select or enter a ROS 2 release."
+    }
+  },
+  "installsAfter": ["ghcr.io/devcontainers/features/common-utils"]
+}
