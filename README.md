@@ -13,10 +13,10 @@ Example `devcontainer.json`:
 
 ```jsonc
 {
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "image": "mcr.microsoft.com/devcontainers/base:noble",
   "features": {
-    "ghcr.io/your-org/your-repo/ros2:0.1.0": {
-      "version": "humble"
+    "ghcr.io/KUCHITAKE/devcontainer-features/ros2": {
+      "version": "jazzy"
     }
   }
 }
