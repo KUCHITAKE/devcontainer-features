@@ -1,0 +1,21 @@
+{
+    "id": "opencommit",
+    "version": "1.0.1",
+    "name": "OpenCommit (via npm)",
+    "documentationURL": "http://github.com/KUCHITAKE/features/dev-features/tree/main/src/opencommit",
+    "description": "OpenCommit is a CLI tool that helps you write conventional commit messages.",
+    "options": {
+        "version": {
+            "default": "latest",
+            "description": "Select the version to install.",
+            "proposals": [
+                "latest"
+            ],
+            "type": "string"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers-extra/features/npm-package",
+        "ghcr.io/devcontainers/features/node"
+    ]
+}
