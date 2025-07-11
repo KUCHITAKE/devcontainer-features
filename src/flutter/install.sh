@@ -61,47 +61,33 @@ get_flutter_download_url() {
     
     # Determine the download URL based on version/channel
     if [ "$version_or_channel" = "latest" ] || [ "$version_or_channel" = "stable" ]; then
-        # Get the latest stable version from Flutter releases API
-        local latest_version=$(curl -s "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json" | \
-            grep -A 10 '"channel": "stable"' | head -20 | \
-            grep '"version":' | head -1 | \
-            sed 's/.*"version": "\([^"]*\)".*/\1/')
-        
-        if [ -z "$latest_version" ]; then
-            echo "Error: Could not determine latest stable version" >&2
-            exit 1
+        # Use the latest stable release URL
+        if [ "$arch_suffix" = "x64" ]; then
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_stable.tar.xz"
+        else
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${arch_suffix}_stable.tar.xz"
         fi
-        
-        echo "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${latest_version}-stable.tar.xz"
     elif [ "$version_or_channel" = "beta" ]; then
-        # Get the latest beta version
-        local latest_version=$(curl -s "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json" | \
-            grep -A 10 '"channel": "beta"' | head -20 | \
-            grep '"version":' | head -1 | \
-            sed 's/.*"version": "\([^"]*\)".*/\1/')
-        
-        if [ -z "$latest_version" ]; then
-            echo "Error: Could not determine latest beta version" >&2
-            exit 1
+        # Use the latest beta release URL
+        if [ "$arch_suffix" = "x64" ]; then
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/beta/linux/flutter_linux_beta.tar.xz"
+        else
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/beta/linux/flutter_linux_${arch_suffix}_beta.tar.xz"
         fi
-        
-        echo "https://storage.googleapis.com/flutter_infra_release/releases/beta/linux/flutter_linux_${latest_version}-beta.tar.xz"
     elif [ "$version_or_channel" = "dev" ]; then
-        # Get the latest dev version
-        local latest_version=$(curl -s "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json" | \
-            grep -A 10 '"channel": "dev"' | head -20 | \
-            grep '"version":' | head -1 | \
-            sed 's/.*"version": "\([^"]*\)".*/\1/')
-        
-        if [ -z "$latest_version" ]; then
-            echo "Error: Could not determine latest dev version" >&2
-            exit 1
+        # Use the latest dev release URL
+        if [ "$arch_suffix" = "x64" ]; then
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/dev/linux/flutter_linux_dev.tar.xz"
+        else
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/dev/linux/flutter_linux_${arch_suffix}_dev.tar.xz"
         fi
-        
-        echo "https://storage.googleapis.com/flutter_infra_release/releases/dev/linux/flutter_linux_${latest_version}-dev.tar.xz"
     else
         # For specific versions, use the version number in the URL
-        echo "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${version_or_channel}-${channel}.tar.xz"
+        if [ "$arch_suffix" = "x64" ]; then
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${version_or_channel}-${channel}.tar.xz"
+        else
+            echo "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${version_or_channel}-${channel}_${arch_suffix}.tar.xz"
+        fi
     fi
 }
 
@@ -191,8 +177,21 @@ if [ ! -d ".git" ]; then
     git init
     git config user.email "devcontainer@example.com"
     git config user.name "DevContainer"
+    
+    # Create a proper git history to avoid version detection issues
+    echo "# Flutter SDK" > README.md
+    git add README.md
+    git commit -m "Initial commit"
+    
+    # Add all Flutter files
     git add .
-    git commit -m "Initial Flutter installation"
+    git commit -m "Add Flutter SDK files"
+    
+    # Create a version tag to help Flutter detect its version
+    if [ -f "version" ]; then
+        FLUTTER_VERSION=$(cat version)
+        git tag -a "v${FLUTTER_VERSION}" -m "Flutter version ${FLUTTER_VERSION}" 2>/dev/null || true
+    fi
 fi
 
 # Return to original directory
@@ -209,7 +208,11 @@ fi
 
 # Pre-download dependencies to speed up first use
 echo "Pre-downloading Flutter dependencies..."
-flutter precache --web
+if [ "$ENABLE_WEB_SUPPORT" = "true" ]; then
+    flutter precache --web
+else
+    flutter precache
+fi
 
 # Run flutter doctor to verify installation
 echo "Verifying Flutter installation..."
