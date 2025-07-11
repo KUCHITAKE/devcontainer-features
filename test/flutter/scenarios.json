@@ -1,0 +1,40 @@
+{
+  "test_defaults_debian": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "flutter": {}
+    }
+  },
+  "test_stable_channel": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "flutter": {
+        "version": "stable",
+        "channel": "stable"
+      }
+    }
+  },
+  "test_beta_channel": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "flutter": {
+        "version": "beta",
+        "channel": "beta"
+      }
+    }
+  },
+  "test_without_web_support": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "flutter": {
+        "enableWebSupport": false
+      }
+    }
+  },
+  "test_ubuntu": {
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+      "flutter": {}
+    }
+  }
+}

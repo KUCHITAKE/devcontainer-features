@@ -1,0 +1,38 @@
+{
+    "id": "flutter",
+    "version": "1.0.0",
+    "name": "Flutter SDK (Web Development)",
+    "description": "Install Flutter SDK for web development. Supports multiple versions and channels with cross-architecture compatibility.",
+    "documentationURL": "https://github.com/KUCHITAKE/devcontainer-features/tree/main/src/flutter",
+    "options": {
+        "version": {
+            "type": "string",
+            "proposals": [
+                "latest",
+                "stable",
+                "beta",
+                "dev"
+            ],
+            "default": "stable",
+            "description": "Select Flutter version or channel. Use 'latest' for the most recent stable, or specify a version like '3.16.0'."
+        },
+        "channel": {
+            "type": "string",
+            "enum": [
+                "stable",
+                "beta",
+                "dev"
+            ],
+            "default": "stable",
+            "description": "Flutter release channel to use."
+        },
+        "enableWebSupport": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable Flutter web support after installation."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
